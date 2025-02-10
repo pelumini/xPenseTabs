@@ -8,29 +8,9 @@ import { images } from "@/constants/images";
 import Button from "@/components/Button";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
-import { useAuth } from "@/contexts/AuthContext";
-import { limit, orderBy, where } from "firebase/firestore";
-import useFetchData from "@/hooks/useFetchData";
-import { WalletType } from "@/types";
 
 const WelcomeScreen = () => {
   const router = useRouter();
-  const { user } = useAuth();
-
-  const constraints = [
-    where("uid", "==", user?.uid),
-    orderBy("date", "desc"),
-    limit(30),
-  ];
-
-  const {
-    data: recentTransactions,
-    error,
-    loading: transactionsLoading,
-  } = useFetchData<WalletType>("wallets", [
-    where("uid", "==", user?.uid),
-    orderBy("created", "desc"),
-  ]);
 
   return (
     <ScreenWrapper>
