@@ -23,7 +23,7 @@ import { updateUser } from "@/services/userService";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import ImageUpload from "@/components/ImageUpload";
-import { creaeOrUpdateWallet, deleteWallet } from "@/services/walletService";
+import { createOrUpdateWallet, deleteWallet } from "@/services/walletService";
 
 const WalletModal = () => {
   const { user, updateUserData } = useAuth();
@@ -91,7 +91,7 @@ const WalletModal = () => {
     };
     if (oldWallet.id) data.id = oldWallet.id;
     setLoading(true);
-    const res = await creaeOrUpdateWallet(data);
+    const res = await createOrUpdateWallet(data);
     setLoading(false);
     if (res.success) {
       router.back();

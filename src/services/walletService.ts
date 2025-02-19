@@ -3,7 +3,7 @@ import { uploadFileCloudinary } from "./imageService";
 import { collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { firestore } from "@/utils/firebase";
 
-export const creaeOrUpdateWallet = async (
+export const createOrUpdateWallet = async (
   walletData: Partial<WalletType>
 ): Promise<ResponseType> => {
   try {
