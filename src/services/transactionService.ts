@@ -1,6 +1,13 @@
 import { ResponseType, TransactionType, WalletType } from "@/types";
 import { firestore } from "@/utils/firebase";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { uploadFileCloudinary } from "./imageService";
 import { createOrUpdateWallet } from "./walletService";
 
@@ -186,6 +193,54 @@ const revertAndUpdateWallets = async (
       amount: newWalletAmount,
       [updateType]: newIncomeExpenseAmount,
     });
+
+    return { success: true };
+  } catch (error: any) {
+    console.log("Error updating wallet for new transaction: ", error);
+    return { success: false, msg: error.message };
+  }
+};
+
+export const deleteTransaction = async (
+  transactionId: string,
+  walletId: string
+) => {
+  try {
+    const transactionRef = doc(firestore, "transactions", transactionId);
+    const transactionSnapshot = await getDoc(transactionRef);
+
+    if (!transactionSnapshot.exists()) {
+      return { success: false, msg: "Transaction not found" };
+    }
+
+    const transactionData = transactionSnapshot.data() as TransactionType;
+
+    const transactionType = transactionData.type;
+    const transactionAmount = transactionData.amount;
+
+    const walletSnapshot = await getDoc(doc(firestore, "wallets", walletId));
+    const walletData = walletSnapshot.data() as WalletType;
+
+    const updateType =
+      transactionType == "income" ? "totalIncome" : "totalExpenses";
+
+    const newWalletAmount =
+      walletData.amount! -
+      (transactionType == "income" ? transactionAmount : -transactionAmount);
+
+    const newIncomeExpenseAmount = walletData[updateType]! - transactionAmount;
+
+    if (transactionType == "expense" && newWalletAmount < 0) {
+      return { success: false, msg: "You cannot delete this transaction" };
+    }
+
+    await createOrUpdateWallet({
+      id: walletId,
+      amount: newWalletAmount,
+      [updateType]: newIncomeExpenseAmount,
+    });
+
+    await deleteDoc(transactionRef);
 
     return { success: true };
   } catch (error: any) {

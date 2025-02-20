@@ -20,7 +20,6 @@ import Button from "@/components/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import ImageUpload from "@/components/ImageUpload";
-import { deleteWallet } from "@/services/walletService";
 import { Dropdown } from "react-native-element-dropdown";
 import { expenseCategories, transactionTypes } from "@/constants/data";
 import useFetchData from "@/hooks/useFetchData";
@@ -29,7 +28,10 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import Input from "@/components/Input";
-import { createOrUpdateTransaction } from "@/services/transactionService";
+import {
+  createOrUpdateTransaction,
+  deleteTransaction,
+} from "@/services/transactionService";
 
 const TransactionModal = () => {
   const { user } = useAuth();
@@ -95,32 +97,31 @@ const TransactionModal = () => {
   const handleDelete = async () => {
     if (!oldTransaction.id) return;
     setLoading(true);
-    const res = await deleteWallet(oldTransaction.id);
+    const res = await deleteTransaction(
+      oldTransaction.id,
+      oldTransaction.walletId
+    );
     setLoading(false);
     if (res.success) {
       router.back();
     } else {
-      Alert.alert("Wallet", res.msg);
+      Alert.alert("Transaction", res.msg);
     }
   };
 
   const showDeleteAlert = () => {
-    Alert.alert(
-      "Confirm",
-      "Are you sure want to do this? \nThis action will remove transactions related to this wallet",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("cancel delete"),
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => handleDelete(),
-          style: "destructive",
-        },
-      ]
-    );
+    Alert.alert("Confirm", "Are you sure want to do this transaction?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("cancel delete"),
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => handleDelete(),
+        style: "destructive",
+      },
+    ]);
   };
 
   const onSubmit = async () => {
@@ -139,7 +140,7 @@ const TransactionModal = () => {
       category,
       date,
       walletId,
-      image,
+      image: image ? image : null,
       uid: user?.uid,
     };
 
