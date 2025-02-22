@@ -1,27 +1,17 @@
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { StyleSheet, ScrollView, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import ModalWrapper from "@/components/ModalWrapper";
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
-import { Image } from "expo-image";
-import { getProfileImage } from "@/services/imageService";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { UserDataType, WalletType } from "@/types";
+import { WalletType } from "@/types";
 import Typo from "@/components/Typo";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { useAuth } from "@/contexts/AuthContext";
-import { updateUser } from "@/services/userService";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
 import ImageUpload from "@/components/ImageUpload";
 import { createOrUpdateWallet, deleteWallet } from "@/services/walletService";
 

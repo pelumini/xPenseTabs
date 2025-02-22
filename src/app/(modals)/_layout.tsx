@@ -8,6 +8,7 @@ const ModalsLayout = () => {
       <Stack.Screen name="profileModal" />
       <Stack.Screen name="walletModal" />
       <Stack.Screen name="transactionModal" />
+      <Stack.Screen name="searchModal" />
     </Stack>
   );
 };
