@@ -269,7 +269,7 @@ export const fetchWeeklyStats = async (uuid: string): Promise<ResponseType> => {
       where("date", ">=", Timestamp.fromDate(sevenDaysAgo)),
       where("date", "<=", Timestamp.fromDate(today)),
       orderBy("date", "desc"),
-      where("uuid", "==", uuid)
+      where("uid", "==", uuid)
     );
 
     const querySnapshot = await getDocs(transactionQuery);
@@ -329,7 +329,7 @@ export const fetchMonthlyStats = async (
       where("date", ">=", Timestamp.fromDate(twelveMonthsAgo)),
       where("date", "<=", Timestamp.fromDate(today)),
       orderBy("date", "desc"),
-      where("uuid", "==", uuid)
+      where("uid", "==", uuid)
     );
 
     const querySnapshot = await getDocs(transactionQuery);
@@ -384,7 +384,7 @@ export const fetchYearlyStats = async (uuid: string): Promise<ResponseType> => {
     const transactionQuery = query(
       collection(db, "transactions"),
       orderBy("date", "desc"),
-      where("uuid", "==", uuid)
+      where("uid", "==", uuid)
     );
 
     const querySnapshot = await getDocs(transactionQuery);

@@ -1,25 +1,20 @@
 import { StyleSheet, ScrollView, View, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
-import { colors, spacingX, spacingY } from "@/constants/theme";
-import { scale, verticalScale } from "@/utils/styling";
+import React, { useState } from "react";
+import { colors, spacingY } from "@/constants/theme";
 import ModalWrapper from "@/components/ModalWrapper";
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { TransactionType, WalletType } from "@/types";
-import Typo from "@/components/Typo";
+import { TransactionType } from "@/types";
 import Input from "@/components/Input";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "expo-router";
-import { limit, orderBy, where } from "firebase/firestore";
+import { orderBy, where } from "firebase/firestore";
 import useFetchData from "@/hooks/useFetchData";
 import TransactionList from "@/components/TransactionList";
 
 const SearchModal = () => {
-  const { user, updateUserData } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const router = useRouter();
 
   const constraints = [where("uid", "==", user?.uid), orderBy("date", "desc")];
 
@@ -40,7 +35,7 @@ const SearchModal = () => {
       }
       return false;
     }
-    return false;
+    return true;
   });
 
   return (
